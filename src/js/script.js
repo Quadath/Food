@@ -198,7 +198,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     const forms = document.querySelectorAll('form');
     const message = {
-        loading: '//src/icons/spinner.svg',
+        loading: 'icons/spinner.svg',
         success: 'Спасибо! Скоро мы с вами свяжемся',
         failure: 'Что-то пошло не так...'
     };
@@ -272,4 +272,7 @@ window.addEventListener('DOMContentLoaded', () => {
             closeModal();
         }, 2000);
     }
+    fetch('db.json')
+        .then(data => data.json())
+        .then(res => console.log(res));
 });
