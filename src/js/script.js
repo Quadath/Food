@@ -171,21 +171,20 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    const getResource = async (url) => {
-        const res = await fetch(url);
-    
-        if (!res.ok) {
-            throw new Error(`Could now fetch ${url}, status is ${res.status}`);
-        }
 
-        return await res.json();
-    };
-
-    getResource('http://localhost:3000/menu')
+    axios.get('http://localhost:3000/menu')
         .then(data => {
-            data.forEach(({img, altimg, title, descr, price}) => {
-                new MenuCard(img, altimg, title, descr, price, '.menu .container').render();
-            });
+            {
+                data.data.forEach(({
+                    img,
+                    altimg,
+                    title,
+                    descr,
+                    price
+                }) => {
+                    new MenuCard(img, altimg, title, descr, price, '.menu .container').render();
+                });
+            }
         });
 
     const forms = document.querySelectorAll('form');
@@ -221,22 +220,22 @@ window.addEventListener('DOMContentLoaded', () => {
                 margin: 0 auto;
             `;
             form.insertAdjacentElement('afterend', statusMessage);
-            
-            
+
+
             const formData = new FormData(form);
 
             const json = JSON.stringify(Object.fromEntries(formData.entries()));
 
             postData('http://localhost:3000/requests', json)
-            .then(data => {
+                .then(data => {
                     console.log(data);
                     showThanksModal(message.success);
                     statusMessage.remove();
-            }).catch(() => {
-                showThanksModal(message.failure);
-            }).finally(() => {
-                form.reset();
-            });
+                }).catch(() => {
+                    showThanksModal(message.failure);
+                }).finally(() => {
+                    form.reset();
+                });
         });
     }
 
