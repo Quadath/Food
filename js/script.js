@@ -132,7 +132,8 @@ window.addEventListener('DOMContentLoaded', function () {
     // Изменил значение, чтобы не отвлекало
 
     function showModalByScroll() {
-        if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
+        if (window.pageYOffset + document.documentElement.clientHeight >=
+            document.documentElement.scrollHeight) {
             openModal();
             window.removeEventListener('scroll', showModalByScroll);
         }
@@ -400,5 +401,74 @@ window.addEventListener('DOMContentLoaded', function () {
                 current.textContent = slideIndex;
             }
         });
+    });
+
+    //Calc
+    const result = document.querySelector('.calculating__result span'),
+        gender = document.querySelector('#gender'),
+        body = document.querySelector('#body'),
+        activity = document.querySelector('#activity'),
+
+        heightInput = document.querySelector('#height'),
+        weightInput = document.querySelector('#weight'),
+        ageInput = document.querySelector('#age');
+
+    let sex = 'female', height, weight, age, ratio = 1.375;
+
+    caltTotal();
+
+    function caltTotal() {
+        if (sex && height && weight && age && ratio) {
+            if (sex === 'female') {
+                result.textContent =
+                    Math.floor((447.6 + (9.2 * weight) + (3.1 * height) - (4.3 * age)) * ratio);
+            } else {
+                result.textContent =
+                    Math.floor((88.36 + (13.4 * weight) + (4.8 * height) - (5.7 * age)) * ratio);
+            }
+        } else {
+            result.textContent = "____";
+        }
+    }
+
+    gender.addEventListener('click', (e) => {
+        if (e.target.matches('#male')) {
+            e.target.classList.add('calculating__choose-item_active');
+            document.querySelector('#female').classList.remove('calculating__choose-item_active');
+            sex = 'male';
+
+            caltTotal();
+        }
+        if (e.target.matches('#female')) {
+            e.target.classList.add('calculating__choose-item_active');
+            document.querySelector('#male').classList.remove('calculating__choose-item_active');
+            sex = 'female';
+
+            caltTotal();
+        }
+    });
+
+    heightInput.addEventListener('input', () => {
+        height = heightInput.value;
+        caltTotal();
+    });
+    weightInput.addEventListener('input', () => {
+        weight = weightInput.value;
+        caltTotal();
+    });
+    ageInput.addEventListener('input', () => {
+        age = ageInput.value;
+        caltTotal();
+    });
+
+    activity.addEventListener('click', (e) => {
+        if (e.target.getAttribute('data-ratio')) {
+            ratio = e.target.getAttribute('data-ratio');
+            const other = document.querySelectorAll('.activity');
+            other.forEach(item => item.classList.remove('calculating__choose-item_active'));
+
+            e.target.classList.add('calculating__choose-item_active');
+            caltTotal();
+        }
     });
 });
