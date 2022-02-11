@@ -415,7 +415,31 @@ window.addEventListener('DOMContentLoaded', function () {
 
     let sex = 'female', height, weight, age, ratio = 1.375;
 
+    
+    //#region init
+    sex = getData('sex');
+    height = getData('height', heightInput);
+    weight = getData('weight', weightInput);
+    age = getData('age', ageInput);
+    
+    function getData(key, input)
+    {
+        if(localStorage.getItem(key)) {
+            if(input) {
+                input.value = localStorage.getItem(key);
+            }
+            return localStorage.getItem(key);
+        }
+        return NaN;
+    }
+
+    if(sex === 'male') {
+        document.querySelector('#male').classList.add('calculating__choose-item_active');
+        document.querySelector('#female').classList.remove('calculating__choose-item_active');
+    }
+    
     caltTotal();
+    //#endregion
 
     function caltTotal() {
         if (sex && height && weight && age && ratio) {
@@ -437,6 +461,7 @@ window.addEventListener('DOMContentLoaded', function () {
             document.querySelector('#female').classList.remove('calculating__choose-item_active');
             sex = 'male';
 
+            localStorage.setItem('sex', 'male');
             caltTotal();
         }
         if (e.target.matches('#female')) {
@@ -444,20 +469,39 @@ window.addEventListener('DOMContentLoaded', function () {
             document.querySelector('#male').classList.remove('calculating__choose-item_active');
             sex = 'female';
 
+            localStorage.setItem('sex', 'female');
             caltTotal();
         }
     });
 
     heightInput.addEventListener('input', () => {
-        height = heightInput.value;
+        if(heightInput.value.match(/\D/g)) {
+            heightInput.style.border = "2px solid red";
+        } else {
+            height = heightInput.value;
+            heightInput.style.border = 'none';
+            localStorage.setItem('height', height);
+        }
         caltTotal();
     });
     weightInput.addEventListener('input', () => {
-        weight = weightInput.value;
+        if(weightInput.value.match(/\D/g)) {
+            weightInput.style.border = "2px solid red";
+        } else {
+            weight = weightInput.value;
+            weightInput.style.border = 'none';
+            localStorage.setItem('weight', weight);
+        }
         caltTotal();
     });
     ageInput.addEventListener('input', () => {
-        age = ageInput.value;
+        if(ageInput.value.match(/\D/g)) {
+            ageInput.style.border = "2px solid red";
+        } else {
+            age = ageInput.value;
+            ageInput.style.border = 'none';
+            localStorage.setItem('age', age);
+        }
         caltTotal();
     });
 
